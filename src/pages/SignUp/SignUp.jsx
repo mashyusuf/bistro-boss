@@ -4,12 +4,15 @@ import { useForm } from "react-hook-form";
 import { AuthContext } from "../../providers/AuthProvider";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from 'sweetalert2'
+import useAxiosPublic from "../../hooks/useAxiosPublic";
+import SocialLogin from "../../SocialLogin/SocialLogin";
 
 const SignUp = () => {
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const { createUser, updateUserProfile } = useContext(AuthContext);
     const navigate = useNavigate();
+    const axiosPublic = useAxiosPublic();
 
     const onSubmit = data => {
         console.log(data);
@@ -19,8 +22,16 @@ const SignUp = () => {
                 console.log(loggedUser);
                 updateUserProfile(data.name, data.photoURL)
                     .then(() => {
-                        console.log('user profile info updated')
-                        reset();
+                        //------create User Entry In DataBase-----
+                        const userInfo = {
+                            name : data.name,
+                            email: data.email,
+                        }
+                        axiosPublic.post('/users', userInfo)
+                        .then(res => {
+                            if(res.data.insertedId){
+                                console.log('User Added To The DataBase')
+                                reset();
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
@@ -29,6 +40,9 @@ const SignUp = () => {
                             timer: 1500
                         });
                         navigate('/');
+                            }
+                        })
+                        
 
                     })
                     .catch(error => console.log(error))
@@ -91,7 +105,8 @@ const SignUp = () => {
                                 <input className="btn btn-primary" type="submit" value="Sign Up" />
                             </div>
                         </form>
-                        <p><small>Already have an account <Link to="/login">Login</Link></small></p>
+                        <p className="p-2"><small>Already have an account <Link to="/login">Login</Link></small></p>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>

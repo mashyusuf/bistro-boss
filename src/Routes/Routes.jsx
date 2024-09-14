@@ -9,6 +9,17 @@ import Login from "../pages/Login/Login";
 import SignUp from "../pages/SignUp/SignUp";
 import PrivateRoute from "./PrivateRoute";
 import Secret from "../pages/Shared/Secret/Secret";
+import DashBoard from "../Layout/DashBoard";
+import Cart from "../pages/DashBoard/Cart";
+import AllUsers from "../pages/DashBoard/AllUsers/AllUsers";
+import AddItems from "../pages/DashBoard/addItems/AddItems";
+import AdminRoute from "./AdminRoute";
+import MangeItems from "../pages/DashBoard/MangeItems/MangeItems";
+import UpdateItem from "../pages/DashBoard/updateItem/UpdateItem";
+import Payment from "../pages/DashBoard/payment/Payment";
+import PaymentHistroy from "../pages/DashBoard/payment histroy/PaymentHistroy";
+import UserHome from "../pages/DashBoard/userHome/UserHome";
+import AdminHome from "../pages/DashBoard/admin Home/AdminHome";
 
 
   export const router = createBrowserRouter([
@@ -42,4 +53,49 @@ import Secret from "../pages/Shared/Secret/Secret";
         }
       ]
     },
+    {
+      path: 'dashboard',
+      element: <DashBoard></DashBoard>,
+      children:[
+        {
+          path: 'userHome',
+          element: <UserHome></UserHome>
+       },
+        {
+          path: 'cart',
+          element: <Cart></Cart>
+       },
+        {
+          path: 'payment',
+          element: <Payment></Payment>
+       },
+        {
+          path: 'paymentHistory',
+          element: <PaymentHistroy></PaymentHistroy>
+       },
+       //----Admin Time-----
+       {
+        path: 'adminHome',
+        element: <AdminRoute><AdminHome></AdminHome></AdminRoute>,
+       },
+       {
+        path: 'allUsers',
+        element: <AdminRoute><AllUsers></AllUsers></AdminRoute>,
+       },
+       {
+        path: 'manageItems',
+        element: <AdminRoute><MangeItems></MangeItems></AdminRoute>,
+       },
+       {
+        path: 'updateItem/:id',
+        element: <AdminRoute><UpdateItem></UpdateItem></AdminRoute>,
+        loader: ({params}) => fetch(`http://localhost:5000/menu/${params.id}`)
+      },
+       {
+        path: 'addItems',
+        element: <AdminRoute><AddItems></AddItems></AdminRoute>
+       }
+    ]
+    }
   ]);
+  
